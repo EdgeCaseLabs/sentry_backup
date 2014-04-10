@@ -13,7 +13,7 @@ from boto.s3.key import Key
 
 logger = logging.getLogger('sentry')
 
-@periodic_task(run_every=crontab(minute=0, hour=[0, 6, 12, 18]))
+@periodic_task(run_every=crontab(minute=0, hour=[2]))
 def dbbackup():
   try:
     tmp = '/tmp/sentry.sql'
