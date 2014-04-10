@@ -11,7 +11,7 @@ from celery.task import task, periodic_task
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
-logger = logging.getLogger()
+logger = logging.getLogger('sentry')
 
 @periodic_task(run_every=crontab(minute=0, hour=[0, 6, 12, 18]))
 def dbbackup():
@@ -31,6 +31,11 @@ def dbbackup():
     if not BACKUP_BUCKET_NAME:
       logger.error('Missing sentry_backup setting BACKUP_BUCKET_NAME. Please add to your sentry.conf.py')
 
+    BACKUP_PATH = getattr(settings, 'BACKUP_PATH', '')
+    #if not BACKUP_PATH:
+    #  logger.error('Missing sentry_backup setting BACKUP_PATH. Please add to your sentry.conf.py')
+
+
     user = settings.DATABASES['default']['USER']
     password = settings.DATABASES['default']['PASSWORD']
     host = settings.DATABASES['default']['HOST']
@@ -49,7 +54,7 @@ def dbbackup():
     bucket = conn.get_bucket(BACKUP_BUCKET_NAME)
     now = datetime.datetime.now()
     k = Key(bucket)
-    k.key = '%d-%d/%s_%d-%d-%d.sql.gz' % (now.year, now.month, dbname, now.day, now.hour, now.minute)
+    k.key = '%s%d-%d/%s_%d-%d-%d.sql.gz' % (BACKUP_PATH, now.year, now.month, dbname, now.day, now.hour, now.minute)
     k.set_contents_from_filename(tmp + '.gz')
     k.set_acl('private')
   except Exception, e:
