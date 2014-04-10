@@ -19,15 +19,15 @@ def dbbackup():
     tmp = '/tmp/sentry.sql'
 
 
-    AWS_ACCESS_KEY_ID = getattr(settings, 'AWS_ACCESS_KEY_ID')
+    AWS_ACCESS_KEY_ID = getattr(settings, 'AWS_ACCESS_KEY_ID', None)
     if not AWS_ACCESS_KEY_ID:
       logger.error('Missing sentry_backup setting AWS_ACCESS_KEY_ID. Please add to your sentry.conf.py')
 
-    AWS_SECRET_ACCESS_KEY = getattr(settings, 'AWS_SECRET_ACCESS_KEY')
+    AWS_SECRET_ACCESS_KEY = getattr(settings, 'AWS_SECRET_ACCESS_KEY', None)
     if not AWS_SECRET_ACCESS_KEY:
       logger.error('Missing sentry_backup setting AWS_SECRET_ACCESS_KEY. Please add to your sentry.conf.py')
 
-    BACKUP_BUCKET_NAME = getattr(settings, 'BACKUP_BUCKET_NAME')
+    BACKUP_BUCKET_NAME = getattr(settings, 'BACKUP_BUCKET_NAME', None)
     if not BACKUP_BUCKET_NAME:
       logger.error('Missing sentry_backup setting BACKUP_BUCKET_NAME. Please add to your sentry.conf.py')
 
